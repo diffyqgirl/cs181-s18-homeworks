@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as c
 import random
 from Perceptron import Perceptron
+from sklearn.svm import SVC
 
 # Implement this class
 class KernelPerceptron(Perceptron):
@@ -155,20 +156,34 @@ val = np.loadtxt("val.csv", delimiter=',')
 X_val = data[:, :2]
 Y_val = data[:, 2]
 
+"""
+clf = SVC()
+clf.fit(X,Y)
+correct = 0
+wrong = 0
+for i in range(len(X_val)):
+	y_pred = clf.predict(Y_val[i])
+	if y_pred == Y[i]:
+		correct += 1
+	else:
+		wrong += 1
+print "Svc", (float(correct)/float(correct+wrong))
+"""
+
 # These are the parameters for the models. Please play with these and note your observations about speed and successful hyperplane formation.
-beta = 0.5
-N = 500
+beta = 0.05
+N = 100
 numsamples = 20000 # 20000
 
 kernel_file_name = 'k.png'
 budget_kernel_file_name = 'bk.png'
 
 # Don't change things below this in your final version. Note that you can use the parameters above to generate multiple graphs if you want to include them in your writeup.
-# k = KernelPerceptron(numsamples)
-# k.sanity_check(X,Y)
-# k.fit(X,Y)
-# k.visualize(kernel_file_name, width=0, show_charts=True, save_fig=True, include_points=False)
-# print "validation", k.validate(X_val, Y_val)
+k = KernelPerceptron(numsamples)
+k.sanity_check(X,Y)
+k.fit(X,Y)
+k.visualize(kernel_file_name, width=0, show_charts=True, save_fig=True, include_points=False)
+print "validation", k.validate(X_val, Y_val)
 
 bk = BudgetKernelPerceptron(beta, N, numsamples)
 bk.fit(X, Y)

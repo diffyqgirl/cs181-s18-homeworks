@@ -24,25 +24,63 @@ def dist_min(cluster_1,cluster_2,norm):
 
 def dist_max(cluster_1,cluster_2,norm):
 	# Calculate the maximum distance between the two clusters.
-	return 0
+	max_dist = 0
+	for p1 in cluster_1:
+		for p2 in cluster_2:
+			n_dist = norm(p1-p2)
+			if n_dist > max_dist:
+				max_dist = n_dist
+	return max_dist
 
 def dist_centroid(cluster_1,cluster_2,norm):
 	# Calculate the centroid distance between the two clusters.
-	return 0
+	x1 = 0
+	y1 = 0
+	for x,y in cluster_1:
+		x1 += x
+		y1 += y
+	x1 = x1/len(cluster_1)
+	y1 = y1/len(cluster_1)
+
+	x2 = 0
+	y2 = 0
+	for x,y in cluster_2:
+		x2 += x
+		y2 += y
+	x2 = x2/len(cluster_2)
+	y2 = y2/len(cluster_2)
+	return norm(np.array([x1-x2,y1-y2]))
 
 def dist_avg(cluster_1, cluster_2,norm):
 	# Calculate the geometric average distance between the two clusters.
-	return 0
+	total = 0
+	for x1,y1 in cluster_1:
+		for x2, y2 in cluster_2:
+			total += norm(np.array([x1-x2,y1-y2]))
+	return total/(len(cluster_1)*len(cluster_2))
+
+def norm_1(A):
+	total = 0
+	for x in A:
+		total += abs(x)
+	return total
+
+def norm_inf(A):
+	max_val = 0
+	for x in A:
+		if abs(x) > max_val:
+			max_val = abs(x)
+	return max_val
 
 # Example code below does the L2 norm for min distance.
 
 # List of norms (this currently only has l2 norm)
-norms_list = [np.linalg.norm]
-norm_names = ["l2 norm"]
+norms_list = [norm_1, np.linalg.norm, norm_inf]
+norm_names = ["l1 norm", "l2 norm", "l_inf norm"]
 
 # List of distances (this currently only has dist_min)
-dist_list = [dist_min]
-dist_names = ["min dist"]
+dist_list = [dist_min, dist_max, dist_centroid, dist_avg]
+dist_names = ["min dist", "max dist", "centroid dist", "avg dist"]
 
 #########################################################################
 # You should not have to change anything below this line. However, feel free
@@ -51,7 +89,7 @@ dist_names = ["min dist"]
 for norm_i in range(len(norms_list)):
 	for dist_i in range(len(dist_list)):
 		print("Using distance function " + str(dist_names[dist_i]) + 
-			"and using norm " + str(norm_names[norm_i]))
+			" and using norm " + str(norm_names[norm_i]))
 
 		#Initialize clusters, points, and step
 		# Define our points and initial clusters
